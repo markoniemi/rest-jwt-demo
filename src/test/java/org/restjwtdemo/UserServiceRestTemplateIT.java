@@ -39,12 +39,10 @@ import lombok.extern.log4j.Log4j2;
 @SpringBootTest(classes = RestJwtDemoApp.class, webEnvironment = WebEnvironment.DEFINED_PORT)
 @ContextHierarchy(@ContextConfiguration(classes = IntegrationTestConfig.class))
 @Log4j2
-public class UserServiceIT {
+public class UserServiceRestTemplateIT {
     private TestRestTemplate testRestTemplate = new TestRestTemplate();
     @Resource
     private String url;
-    @Resource
-    private UserClient userClient;
     @Resource
     private RestRequestInterceptor requestInterceptor;
 
@@ -53,15 +51,9 @@ public class UserServiceIT {
         testRestTemplate.getRestTemplate().setInterceptors(Collections.singletonList(requestInterceptor));
     }
 
-    public UserService getUserWsClient() throws MalformedURLException {
-        URL wsdlURL = new URL("http://localhost:8082/api/soap/users?wsdl");
-        QName qname = new QName("http://user.service.restjwtdemo.org/", "UserService");
-        Service service = Service.create(wsdlURL, qname);
-        return service.getPort(UserService.class);
-    }
 
     @Test
-    public void getUsersRest() throws JsonParseException, JsonMappingException, IOException {
+    public void getUsers() throws JsonParseException, JsonMappingException, IOException {
         ResponseEntity<String> responseString = testRestTemplate.getForEntity(url + "/api/rest/users", String.class);
         Assert.assertNotNull(responseString);
         List<User> users = parseResponse(responseString);
@@ -70,25 +62,11 @@ public class UserServiceIT {
     }
 
     @Test
-    public void getUserRest() throws JsonParseException, JsonMappingException, IOException {
+    public void getUser() throws JsonParseException, JsonMappingException, IOException {
         User user = testRestTemplate.getForObject(url + "/api/rest/users?username=admin1", User.class);
         Assert.assertEquals("admin1", user.getUsername());
     }
 
-    @Test
-    public void getUsersFeign() throws JsonParseException, JsonMappingException, IOException {
-        User[] users = userClient.findAll();
-        Assert.assertNotNull(users);
-        Assert.assertEquals(1, users.length);
-    }
-
-    @Test
-    public void getUsersWs() throws JsonParseException, JsonMappingException, IOException {
-        UserService userService = getUserWsClient();
-        User[] users = userService.findAll();
-        Assert.assertNotNull(users);
-        Assert.assertEquals(1, users.length);
-    }
 
     private List<User> parseResponse(ResponseEntity<String> responseString)
             throws IOException, JsonParseException, JsonMappingException {
