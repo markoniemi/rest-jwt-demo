@@ -1,32 +1,30 @@
 package org.restjwtdemo;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.Collections;
 import java.util.List;
 
 import javax.annotation.Resource;
-import javax.xml.namespace.QName;
-import javax.xml.ws.Service;
 
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.restjwtdemo.RestJwtDemoApp;
 import org.restjwtdemo.config.IntegrationTestConfig;
 import org.restjwtdemo.config.RestRequestInterceptor;
 import org.restjwtdemo.model.user.User;
-import org.restjwtdemo.service.user.UserClient;
-import org.restjwtdemo.service.user.UserService;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.ContextHierarchy;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -38,7 +36,6 @@ import lombok.extern.log4j.Log4j2;
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = RestJwtDemoApp.class, webEnvironment = WebEnvironment.DEFINED_PORT)
 @ContextHierarchy(@ContextConfiguration(classes = IntegrationTestConfig.class))
-@Log4j2
 public class UserServiceRestTemplateIT {
     private TestRestTemplate testRestTemplate = new TestRestTemplate();
     @Resource
@@ -51,6 +48,21 @@ public class UserServiceRestTemplateIT {
         testRestTemplate.getRestTemplate().setInterceptors(Collections.singletonList(requestInterceptor));
     }
 
+    @Test
+    private void login() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+        MultiValueMap<String, String> map= new LinkedMultiValueMap<String, String>();
+        map.add("username", "admin1");
+        map.add("password", "admin");
+        HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<MultiValueMap<String, String>>(map, headers);
+        ResponseEntity<String> response = testRestTemplate.postForEntity( url + "/login", request , String.class );
+        List<String> list = response.getHeaders().get("Authorization");
+        Assert.assertNotNull(list);
+        Assert.assertEquals(1, list.size());
+        String token = list.get(0);
+        Assert.assertTrue(token.startsWith("Bearer"));
+    }
 
     @Test
     public void getUsers() throws JsonParseException, JsonMappingException, IOException {
