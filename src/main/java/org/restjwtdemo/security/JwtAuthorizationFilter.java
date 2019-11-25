@@ -8,52 +8,39 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.algorithms.Algorithm;
-
 public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
-    public static final String AUTHORIZATION_HEADER = "Authorization";
-    public static final String TOKEN_PREFIX = "Bearer ";
-    public static final String SECRET = "secret";
 
     public JwtAuthorizationFilter(AuthenticationManager authManager) {
         super(authManager);
     }
 
     @Override
-    protected void doFilterInternal(HttpServletRequest req,
-                                    HttpServletResponse res,
-                                    FilterChain chain) throws IOException, ServletException {
-        // TODO refactor
-        String header = req.getHeader(AUTHORIZATION_HEADER);
-        if (header == null || !header.startsWith(TOKEN_PREFIX)) {
-            chain.doFilter(req, res);
-            return;
-        }
-        UsernamePasswordAuthenticationToken authentication = getAuthentication(req);
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        chain.doFilter(req, res);
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
+            throws IOException, ServletException {
+        String token = getToken(request);
+        SecurityContextHolder.getContext().setAuthentication(getAuthentication(token));
+        chain.doFilter(request, response);
     }
 
-    private UsernamePasswordAuthenticationToken getAuthentication(HttpServletRequest request) {
-        // TODO refactor and move bits to token util
-        String token = request.getHeader(AUTHORIZATION_HEADER);
-        if (token != null) {
-            // parse the token.
-            String user = JWT.require(Algorithm.HMAC512(SECRET.getBytes()))
-                    .build()
-                    .verify(token.replace(TOKEN_PREFIX, ""))
-                    .getSubject();
-            if (user != null) {
-                return new UsernamePasswordAuthenticationToken(user, null, new ArrayList<>());
-            }
+    private String getToken(HttpServletRequest request) {
+        String header = request.getHeader(JwtToken.AUTHORIZATION_HEADER);
+        if (StringUtils.isBlank(header)) {
             return null;
         }
-        return null;
+        return header.replace(JwtToken.TOKEN_PREFIX, "");
+    }
+
+    private UsernamePasswordAuthenticationToken getAuthentication(String token) {
+        String user = JwtToken.verifyToken(token);
+        if (StringUtils.isBlank(user)) {
+            return null;
+        }
+        return new UsernamePasswordAuthenticationToken(user, null, new ArrayList<>());
     }
 }

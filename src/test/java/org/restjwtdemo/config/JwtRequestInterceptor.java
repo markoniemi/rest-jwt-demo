@@ -1,6 +1,7 @@
 package org.restjwtdemo.config;
 
 import org.restjwtdemo.security.JwtAuthenticationFilter;
+import org.restjwtdemo.security.JwtToken;
 import org.springframework.beans.factory.annotation.Value;
 
 import feign.RequestInterceptor;
@@ -14,7 +15,7 @@ public class JwtRequestInterceptor implements RequestInterceptor {
 
     @Override
     public void apply(RequestTemplate requestTemplate) {
-        requestTemplate.header("Authorization", "Bearer " + JwtAuthenticationFilter.createToken("admin1"));
+        requestTemplate.header("Authorization", "Bearer " + JwtToken.createToken("admin1"));
 //        requestTemplate.header("Authorization: Bearer " + this.jwtToken);
     }
 }

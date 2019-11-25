@@ -49,7 +49,7 @@ public class UserServiceRestTemplateIT {
     }
 
     @Test
-    private void login() {
+    public void login() {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
         MultiValueMap<String, String> map= new LinkedMultiValueMap<String, String>();
