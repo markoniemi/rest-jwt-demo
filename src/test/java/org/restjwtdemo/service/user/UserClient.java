@@ -1,7 +1,8 @@
 package org.restjwtdemo.service.user;
 
+import java.util.List;
+
 import org.restjwtdemo.model.user.User;
-import org.restjwtdemo.service.user.UserService;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Service
 @FeignClient(url = "http://localhost:8082/api/rest", name = "users")
@@ -17,7 +19,9 @@ public interface UserClient extends UserService {
 
     @Override
     @GetMapping(value = "/users")
-    User[] findAll();
+    List<User> findAll(@RequestParam(value = "page", defaultValue = "0") Integer page,
+            @RequestParam(value = "size", defaultValue = "10") Integer size,
+            @RequestParam(value = "sortBy", defaultValue = "id") String sortBy);
 
     @Override
     @PostMapping(value = "/users")

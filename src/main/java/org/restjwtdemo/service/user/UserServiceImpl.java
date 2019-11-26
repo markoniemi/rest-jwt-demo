@@ -1,12 +1,15 @@
 package org.restjwtdemo.service.user;
 
+import java.util.List;
+
 import javax.annotation.Resource;
 import javax.jws.WebService;
 
-import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.lang3.Validate;
 import org.restjwtdemo.model.user.User;
 import org.restjwtdemo.repository.user.UserRepository;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 
 import lombok.extern.log4j.Log4j2;
@@ -19,9 +22,9 @@ public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
 
     @Override
-    public User[] findAll() {
+    public List<User> findAll(Integer page, Integer size, String sortBy) {
         log.trace("findAll");
-        return IterableUtils.toList(userRepository.findAll()).toArray(new User[0]);
+        return userRepository.findAll(PageRequest.of(page, size, Sort.by(sortBy))).getContent();
     }
 
     @Override

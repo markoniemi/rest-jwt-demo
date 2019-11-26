@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Collections;
+import java.util.List;
 
 import javax.xml.namespace.QName;
 import javax.xml.ws.BindingProvider;
@@ -36,9 +37,9 @@ public class UserServiceWsIT {
     @Ignore
     public void getUsersWs() throws JsonParseException, JsonMappingException, IOException {
         UserService userService = getUserClient();
-        User[] users = userService.findAll();
+        List<User> users = userService.findAll(null, null, null);
         Assert.assertNotNull(users);
-        Assert.assertEquals(1, users.length);
+        Assert.assertEquals(1, users.size());
     }
 
     public UserService getUserClient() throws MalformedURLException {

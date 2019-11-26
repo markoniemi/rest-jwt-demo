@@ -1,6 +1,7 @@
 package org.restjwtdemo;
 
 import java.io.IOException;
+import java.util.List;
 
 import javax.annotation.Resource;
 
@@ -30,9 +31,9 @@ public class UserServiceFeignIT {
     private UserClient userClient;
     @Test
     public void getUsersFeign() throws JsonParseException, JsonMappingException, IOException {
-        User[] users = userClient.findAll();
+        List<User> users = userClient.findAll(null, null, null);
         Assert.assertNotNull(users);
-        Assert.assertEquals(1, users.length);
+        Assert.assertEquals(1, users.size());
     }
 
 }

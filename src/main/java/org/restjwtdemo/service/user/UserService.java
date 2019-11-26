@@ -1,14 +1,14 @@
 package org.restjwtdemo.service.user;
 
+import java.util.List;
+
 import javax.jws.WebService;
 
 import org.restjwtdemo.model.user.User;
-import org.springframework.web.bind.annotation.RestController;
 
-@RestController
 @WebService
 public interface UserService {
-    User[] findAll();
+    List<User> findAll(Integer page, Integer size, String sortBy);
 
     User create(User user);
 

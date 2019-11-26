@@ -16,8 +16,10 @@ import org.restjwtdemo.model.user.User;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ContextConfiguration;
@@ -30,8 +32,6 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
-import lombok.extern.log4j.Log4j2;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = RestJwtDemoApp.class, webEnvironment = WebEnvironment.DEFINED_PORT)
@@ -52,11 +52,11 @@ public class UserServiceRestTemplateIT {
     public void login() {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-        MultiValueMap<String, String> map= new LinkedMultiValueMap<String, String>();
+        MultiValueMap<String, String> map = new LinkedMultiValueMap<String, String>();
         map.add("username", "admin1");
         map.add("password", "admin");
         HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<MultiValueMap<String, String>>(map, headers);
-        ResponseEntity<String> response = testRestTemplate.postForEntity( url + "/login", request , String.class );
+        ResponseEntity<String> response = testRestTemplate.postForEntity(url + "/login", request, String.class);
         List<String> list = response.getHeaders().get("Authorization");
         Assert.assertNotNull(list);
         Assert.assertEquals(1, list.size());
@@ -74,11 +74,20 @@ public class UserServiceRestTemplateIT {
     }
 
     @Test
+    public void getUsersWithPageAndSize() throws JsonParseException, JsonMappingException, IOException {
+        ResponseEntity<String> responseString = testRestTemplate.getForEntity(url + "/api/rest/users?page=0&size=10",
+                String.class);
+        Assert.assertNotNull(responseString);
+        List<User> users = parseResponse(responseString);
+        Assert.assertNotNull(users);
+        Assert.assertEquals(1, users.size());
+    }
+
+    @Test
     public void getUser() throws JsonParseException, JsonMappingException, IOException {
         User user = testRestTemplate.getForObject(url + "/api/rest/users?username=admin1", User.class);
         Assert.assertEquals("admin1", user.getUsername());
     }
-
 
     private List<User> parseResponse(ResponseEntity<String> responseString)
             throws IOException, JsonParseException, JsonMappingException {
