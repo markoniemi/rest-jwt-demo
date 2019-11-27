@@ -30,10 +30,15 @@ public class UserServiceFeignIT {
     @Resource
     private UserClient userClient;
     @Test
-    public void getUsersFeign() throws JsonParseException, JsonMappingException, IOException {
+    public void getUsers() throws JsonParseException, JsonMappingException, IOException {
         List<User> users = userClient.findAll(null, null, null);
         Assert.assertNotNull(users);
-        Assert.assertEquals(1, users.size());
+        Assert.assertEquals(10, users.size());
     }
-
+    @Test
+    public void getUsersWithPageAndSize() throws JsonParseException, JsonMappingException, IOException {
+        List<User> users = userClient.findAll(2 , 2, null);
+        Assert.assertNotNull(users);
+        Assert.assertEquals(2, users.size());
+    }
 }

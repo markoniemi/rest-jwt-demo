@@ -70,17 +70,17 @@ public class UserServiceRestTemplateIT {
         Assert.assertNotNull(responseString);
         List<User> users = parseResponse(responseString);
         Assert.assertNotNull(users);
-        Assert.assertEquals(1, users.size());
+        Assert.assertEquals(10, users.size());
     }
 
     @Test
     public void getUsersWithPageAndSize() throws JsonParseException, JsonMappingException, IOException {
-        ResponseEntity<String> responseString = testRestTemplate.getForEntity(url + "/api/rest/users?page=0&size=10",
+        ResponseEntity<String> responseString = testRestTemplate.getForEntity(url + "/api/rest/users?page=0&size=2",
                 String.class);
         Assert.assertNotNull(responseString);
         List<User> users = parseResponse(responseString);
         Assert.assertNotNull(users);
-        Assert.assertEquals(1, users.size());
+        Assert.assertEquals(2, users.size());
     }
 
     @Test

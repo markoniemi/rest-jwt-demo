@@ -35,11 +35,19 @@ public class UserServiceWsIT {
 
     @Test
     @Ignore
-    public void getUsersWs() throws JsonParseException, JsonMappingException, IOException {
+    public void getUsers() throws JsonParseException, JsonMappingException, IOException {
         UserService userService = getUserClient();
         List<User> users = userService.findAll(null, null, null);
         Assert.assertNotNull(users);
-        Assert.assertEquals(1, users.size());
+        Assert.assertEquals(10, users.size());
+    }
+    @Test
+    @Ignore
+    public void getUsersWithPageAndSize() throws JsonParseException, JsonMappingException, IOException {
+        UserService userService = getUserClient();
+        List<User> users = userService.findAll(2 , 2, null);
+        Assert.assertNotNull(users);
+        Assert.assertEquals(2, users.size());
     }
 
     public UserService getUserClient() throws MalformedURLException {
