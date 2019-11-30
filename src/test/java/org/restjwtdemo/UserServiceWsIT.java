@@ -37,7 +37,7 @@ public class UserServiceWsIT {
     @Ignore
     public void getUsers() throws JsonParseException, JsonMappingException, IOException {
         UserService userService = getUserClient();
-        List<User> users = userService.findAll(null, null, null);
+        List<User> users = userService.findAll();
         Assert.assertNotNull(users);
         Assert.assertEquals(10, users.size());
     }
@@ -45,7 +45,7 @@ public class UserServiceWsIT {
     @Ignore
     public void getUsersWithPageAndSize() throws JsonParseException, JsonMappingException, IOException {
         UserService userService = getUserClient();
-        List<User> users = userService.findAll(2 , 2, null);
+        List<User> users = userService.findAllWithPaging(2 , 2, null);
         Assert.assertNotNull(users);
         Assert.assertEquals(2, users.size());
     }

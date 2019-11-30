@@ -19,7 +19,11 @@ public interface UserClient extends UserService {
 
     @Override
     @GetMapping(value = "/users")
-    List<User> findAll(@RequestParam(value = "page", defaultValue = "0") Integer page,
+    List<User> findAll();
+
+    @Override
+    @GetMapping(value = "/users")
+    List<User> findAllWithPaging(@RequestParam(value = "page", defaultValue = "0") Integer page,
             @RequestParam(value = "size", defaultValue = "10") Integer size,
             @RequestParam(value = "sortBy", defaultValue = "id") String sortBy);
 

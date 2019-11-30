@@ -31,13 +31,13 @@ public class UserServiceFeignIT {
     private UserClient userClient;
     @Test
     public void getUsers() throws JsonParseException, JsonMappingException, IOException {
-        List<User> users = userClient.findAll(null, null, null);
+        List<User> users = userClient.findAll();
         Assert.assertNotNull(users);
         Assert.assertEquals(10, users.size());
     }
     @Test
     public void getUsersWithPageAndSize() throws JsonParseException, JsonMappingException, IOException {
-        List<User> users = userClient.findAll(2 , 2, null);
+        List<User> users = userClient.findAllWithPaging(2 , 2, null);
         Assert.assertNotNull(users);
         Assert.assertEquals(2, users.size());
     }

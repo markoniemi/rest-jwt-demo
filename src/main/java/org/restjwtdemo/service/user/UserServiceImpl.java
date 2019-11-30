@@ -1,10 +1,12 @@
 package org.restjwtdemo.service.user;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Resource;
 import javax.jws.WebService;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.Validate;
 import org.restjwtdemo.model.user.User;
 import org.restjwtdemo.repository.user.UserRepository;
@@ -22,7 +24,15 @@ public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
 
     @Override
-    public List<User> findAll(Integer page, Integer size, String sortBy) {
+    public List<User> findAll() {
+        log.trace("findAll");
+        List<User> users = new ArrayList<>();
+        CollectionUtils.addAll(users, userRepository.findAll());
+        return users;
+    }
+
+    @Override
+    public List<User> findAllWithPaging(Integer page, Integer size, String sortBy) {
         log.trace("findAll");
         return userRepository.findAll(PageRequest.of(page, size, Sort.by(sortBy))).getContent();
     }
