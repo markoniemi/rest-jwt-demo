@@ -1,41 +1,26 @@
 package org.restjwtdemo.config;
 
 import javax.annotation.Resource;
-import javax.servlet.Servlet;
+import javax.xml.ws.Endpoint;
 
-import org.jvnet.jax_ws_commons.spring.SpringService;
+import org.apache.cxf.Bus;
+import org.apache.cxf.jaxws.EndpointImpl;
 import org.restjwtdemo.service.user.UserService;
-import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
-import com.sun.xml.ws.transport.http.servlet.SpringBinding;
-import com.sun.xml.ws.transport.http.servlet.WSSpringServlet;
-
 @Configuration
-@ComponentScan(basePackages = "org.restjwtdemo")
 public class WebServiceConfig {
     @Resource
-    UserService userService;
+    private UserService userService;
+    @Resource
+    private Bus bus;
 
     @Bean
-    public Servlet jaxwsServlet() {
-        return new WSSpringServlet();
-    }
-
-    @Bean
-    public ServletRegistrationBean<Servlet> servletRegistrationBean() {
-        return new ServletRegistrationBean<Servlet>(jaxwsServlet(), "/api/soap/*");
-    }
-
-    @Bean()
-    public SpringBinding springBinding() throws Exception {
-        SpringService service = new SpringService();
-        service.setBean(userService);
-        SpringBinding binding = new SpringBinding();
-        binding.setService(service.getObject());
-        binding.setUrl("/api/soap/users");
-        return binding;
+    public Endpoint endpoint() {
+        EndpointImpl endpoint = new EndpointImpl(bus, userService);
+        endpoint.setAddress("/soap");
+        endpoint.publish("/soap");
+        return endpoint;
     }
 }

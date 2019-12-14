@@ -41,14 +41,14 @@ public class UserServiceWsIT {
         Assert.assertNotNull(users);
         Assert.assertEquals(10, users.size());
     }
-    @Test
-    @Ignore
-    public void getUsersWithPageAndSize() throws JsonParseException, JsonMappingException, IOException {
-        UserService userService = getUserClient();
-        List<User> users = userService.findAllWithPaging(2 , 2, null);
-        Assert.assertNotNull(users);
-        Assert.assertEquals(2, users.size());
-    }
+//    @Test
+//    @Ignore
+//    public void getUsersWithPageAndSize() throws JsonParseException, JsonMappingException, IOException {
+//        UserService userService = getUserClient();
+//        List<User> users = userService.findAllWithPaging(2 , 2, null);
+//        Assert.assertNotNull(users);
+//        Assert.assertEquals(2, users.size());
+//    }
 
     public UserService getUserClient() throws MalformedURLException {
         URL wsdlURL = new URL("http://localhost:8082/api/soap/users?wsdl");

@@ -6,6 +6,7 @@
     <artifactId>rest-jwt-demo</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <properties>
+        <org.apache.cxf.version>3.3.4</org.apache.cxf.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <spring.boot.version>2.1.9.RELEASE</spring.boot.version>
         <jacoco.maven.plugin.version>0.8.5</jacoco.maven.plugin.version>
@@ -22,9 +23,29 @@
             </exclusions>
         </dependency>
         <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-rest</artifactId>
+<!--             <exclusions> -->
+<!--                 <exclusion> -->
+<!--                     <groupId>org.springframework.hateoas</groupId> -->
+<!--                     <artifactId>spring-hateoas</artifactId> -->
+<!--                 </exclusion> -->
+<!--             </exclusions> -->
+        </dependency>
+        <dependency>
             <groupId>org.apache.cxf</groupId>
             <artifactId>cxf-spring-boot-starter-jaxrs</artifactId>
-            <version>3.3.4</version>
+            <version>${org.apache.cxf.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.cxf</groupId>
+            <artifactId>cxf-rt-frontend-jaxrs</artifactId>
+            <version>${org.apache.cxf.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.cxf</groupId>
+            <artifactId>cxf-spring-boot-starter-jaxws</artifactId>
+            <version>${org.apache.cxf.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>

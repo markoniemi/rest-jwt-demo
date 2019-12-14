@@ -1,21 +1,20 @@
 package org.restjwtdemo.service.user;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Resource;
 import javax.jws.WebService;
 
-import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.collections4.IterableUtils;
 import org.apache.commons.lang3.Validate;
 import org.restjwtdemo.model.user.User;
 import org.restjwtdemo.repository.user.UserRepository;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 
 import lombok.extern.log4j.Log4j2;
 
+@Primary
 @Log4j2
 @Component(value = "userService")
 @WebService(endpointInterface = "org.restjwtdemo.service.user.UserService", serviceName = "UserService")
@@ -26,18 +25,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<User> findAll() {
         log.trace("findAll");
-        List<User> users = new ArrayList<>();
-        CollectionUtils.addAll(users, userRepository.findAll());
-        return users;
+        return IterableUtils.toList(userRepository.findAll());
     }
 
     @Override
-    public List<User> findAllWithPaging(Integer page, Integer size, String sortBy) {
-        log.trace("findAll");
-        return userRepository.findAll(PageRequest.of(page, size, Sort.by(sortBy))).getContent();
-    }
-
-    @Override
+    // @Transactional(readOnly=false)
     public User create(User user) {
         Validate.notNull(user, "invalid.user");
         Validate.notBlank(user.getUsername(), "invalid.user.username");
@@ -60,11 +52,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User findById(Long id) {
-        return userRepository.findById(id).orElse(null);
+        log.trace("findById: {}", id);
+        return userRepository.findById(id).get();
     }
-
     @Override
     public User findByUsername(String username) {
+        log.trace("findByUsername: {}", username);
         return userRepository.findByUsername(username);
     }
 
@@ -76,15 +69,13 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean exists(Long id) {
-        return userRepository.existsById(id);
+        return userRepository.findById(id) != null;
     }
 
     @Override
     public void delete(Long id) {
         log.trace("delete: {}", id);
-        if (userRepository.existsById(id)) {
-            userRepository.deleteById(id);
-        }
+        userRepository.deleteById(id);
     }
 
     @Override
