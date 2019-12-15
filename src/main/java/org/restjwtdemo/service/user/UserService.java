@@ -15,7 +15,6 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
 import org.restjwtdemo.model.user.User;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -54,14 +53,15 @@ public interface UserService {
 
     @GET
     @Path("/{id}")
-    User findById(@PathVariable("id") Long id);
+    User findById(@PathParam("id") Long id);
 
     /**
      * @return user by username, or null if user does not exist
      */
     @GET
-//    @Path("/{username}")
-    User findByUsername(@QueryParam("username") @WebParam(name = "username") String username);
+    @Path("/username/{username}")
+    User findByUsername(@PathParam("username") @WebParam(name = "username") String username);
+//    User findByUsername(@QueryParam("username") @WebParam(name = "username") String username);
 
     /**
      * @return user by email, or null if user does not exist
