@@ -11,7 +11,6 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
 import org.restjwtdemo.model.user.User;
@@ -19,7 +18,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @WebService
-// @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
 @Produces({ MediaType.APPLICATION_JSON })
 @Path("/users")
 public interface UserService {
@@ -32,12 +30,9 @@ public interface UserService {
     /**
      * Creates a user to repository.
      * 
-     * @throws NullPointerException
-     *             if the username is null
-     * @throws IllegalArgumentException
-     *             if the username is blank
-     * @throws IllegalArgumentException
-     *             if username already exists
+     * @throws NullPointerException     if the username is null
+     * @throws IllegalArgumentException if the username is blank
+     * @throws IllegalArgumentException if username already exists
      */
     @POST
     User create(@WebParam(name = "user") User user);
@@ -45,8 +40,7 @@ public interface UserService {
     /**
      * Updates a user in repository.
      * 
-     * @throws NullPointerException
-     *             if the user does not exist
+     * @throws NullPointerException if the user does not exist
      */
     @PUT
     User update(@WebParam(name = "user") User user);
@@ -61,7 +55,6 @@ public interface UserService {
     @GET
     @Path("/username/{username}")
     User findByUsername(@PathParam("username") @WebParam(name = "username") String username);
-//    User findByUsername(@QueryParam("username") @WebParam(name = "username") String username);
 
     /**
      * @return user by email, or null if user does not exist

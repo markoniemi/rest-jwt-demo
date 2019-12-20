@@ -105,15 +105,10 @@ public class UserServiceRestTemplateIT {
     }
 
     @Test
-//    @Ignore
     public void findByIdUsername() throws JsonParseException, JsonMappingException, IOException {
         User user = testRestTemplate.getForObject(url + "/api/rest/users/username/admin1", User.class);
         Assert.assertEquals("admin1", user.getUsername());
     }
-//    public void findByIdUsername() throws JsonParseException, JsonMappingException, IOException {
-//        User user = testRestTemplate.getForObject(url + "/api/rest/users?username=admin1", User.class);
-//        Assert.assertEquals("admin1", user.getUsername());
-//    }
 
     @Test
     public void create() throws JsonProcessingException {
