@@ -11,30 +11,13 @@ import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
-import org.springframework.data.rest.core.config.RepositoryRestConfiguration;
-import org.springframework.data.rest.webmvc.config.RepositoryRestConfigurer;
-import org.springframework.data.rest.webmvc.config.RepositoryRestConfigurerAdapter;
-import org.springframework.http.MediaType;
 
 import com.fasterxml.jackson.jaxrs.json.JacksonJaxbJsonProvider;
 
 @Configuration
-// @RestControllerAdvice(basePackages="org.survey")
 public class RestConfig {
     @Resource
     private UserService userService;
-
-    @Bean
-    public RepositoryRestConfigurer repositoryRestConfigurer() {
-        return new RepositoryRestConfigurerAdapter() {
-            @Override
-            public void configureRepositoryRestConfiguration(RepositoryRestConfiguration config) {
-                config.setDefaultMediaType(MediaType.APPLICATION_JSON);
-                config.useHalAsDefaultJsonMediaType(false);
-                config.getMetadataConfiguration().setAlpsEnabled(false);
-            }
-        };
-    }
 
     @Bean(destroyMethod = "shutdown")
     public SpringBus cxf() {
