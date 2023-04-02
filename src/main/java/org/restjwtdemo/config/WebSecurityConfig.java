@@ -1,14 +1,12 @@
 package org.restjwtdemo.config;
 
 import javax.annotation.Resource;
-
 import org.restjwtdemo.security.JwtAuthenticationFilter;
 import org.restjwtdemo.security.JwtAuthorizationFilter;
 import org.restjwtdemo.security.UserRepositoryAuthenticationProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -32,11 +30,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        // TODO add "/h2-console/**"
         http.cors().and().csrf().disable();
-//        http.authorizeRequests().antMatchers("/h2-console/**", "/api/soap/**","/api/rest/**").permitAll().anyRequest().authenticated();
-        http.authorizeRequests().antMatchers(HttpMethod.POST, "/login").permitAll().anyRequest().authenticated().and()
-                .addFilter(new JwtAuthenticationFilter(authenticationManager()))
+        http.authorizeRequests().antMatchers( "/api/rest/auth/login/**","/h2-console/**","/api/soap/users?wsdl").permitAll()//
+                .anyRequest().authenticated()//
+                .and()//
+                .addFilter(new JwtAuthenticationFilter(authenticationManager()))//
                 .addFilter(new JwtAuthorizationFilter(authenticationManager()));
         // this disables session creation on Spring Security
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);

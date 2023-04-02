@@ -4,10 +4,9 @@ import static com.auth0.jwt.algorithms.Algorithm.HMAC512;
 
 import java.util.Date;
 
-import org.apache.commons.lang3.StringUtils;
-
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.exceptions.JWTDecodeException;
 
 /**
  * Utility class for handling JWT tokens.
@@ -25,10 +24,11 @@ public class JwtToken {
     }
 
     public static String verifyToken(String token) {
-        // TODO separate to verify and getUser methods
-        String user = JWT.require(Algorithm.HMAC512(secret.getBytes())).build().verify(token)
-                .getSubject();
-        return user;
+        try {
+            return JWT.require(Algorithm.HMAC512(secret.getBytes())).build().verify(token).getSubject();
+        } catch (JWTDecodeException | NullPointerException e) {
+            return null;
+        }
     }
 
     public static boolean hasToken(String header) {

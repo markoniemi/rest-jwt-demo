@@ -1,9 +1,10 @@
 package org.restjwtdemo.service.user;
 
 import java.util.List;
-
 import javax.jws.WebParam;
 import javax.jws.WebService;
+import javax.validation.Valid;
+import javax.ws.rs.BeanParam;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -12,30 +13,33 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
-
 import org.restjwtdemo.model.user.User;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.validation.BindException;
+import org.springframework.validation.annotation.Validated;
 
-@RestController
 @WebService
 @Produces({ MediaType.APPLICATION_JSON })
 @Path("/users")
+@Validated
 public interface UserService {
     /**
      * @return all users from repository or an empty list in case of no items.
      */
-    @GET
     List<User> findAll();
+    @GET
+    List<User> find(@BeanParam UserSearchForm userSearchForm);
 
     /**
      * Creates a user to repository.
+     * 
+     * @throws BindException
      * 
      * @throws NullPointerException     if the username is null
      * @throws IllegalArgumentException if the username is blank
      * @throws IllegalArgumentException if username already exists
      */
     @POST
-    User create(@WebParam(name = "user") User user);
+    User create(@WebParam(name = "user") User user) throws BindException;
 
     /**
      * Updates a user in repository.
@@ -43,7 +47,8 @@ public interface UserService {
      * @throws NullPointerException if the user does not exist
      */
     @PUT
-    User update(@WebParam(name = "user") User user);
+    @Path("/{id}")
+    User update(@Valid @WebParam(name = "user") User user);
 
     @GET
     @Path("/{id}")

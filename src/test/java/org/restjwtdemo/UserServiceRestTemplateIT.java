@@ -10,21 +10,14 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.restjwtdemo.config.IntegrationTestConfig;
 import org.restjwtdemo.config.RestRequestInterceptor;
 import org.restjwtdemo.model.user.Role;
 import org.restjwtdemo.model.user.User;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.ContextHierarchy;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
@@ -36,10 +29,7 @@ import lombok.Data;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest(classes = RestJwtDemoApp.class, webEnvironment = WebEnvironment.DEFINED_PORT)
-@ContextHierarchy(@ContextConfiguration(classes = IntegrationTestConfig.class))
-public class UserServiceRestTemplateIT {
+public class UserServiceRestTemplateIT extends AbstractIntegrationTestBase {
     private TestRestTemplate testRestTemplate = new TestRestTemplate();
     @Resource
     private String url;
@@ -85,17 +75,6 @@ public class UserServiceRestTemplateIT {
         User[] users = testRestTemplate.getForObject(url + "/api/rest/users", User[].class);
         Assert.assertNotNull(users);
         Assert.assertEquals(21, users.length);
-    }
-
-    @Test
-    @Ignore
-    public void findUsersWithPaging() throws JsonParseException, JsonMappingException, IOException {
-        ResponseEntity<String> responseString = testRestTemplate.getForEntity(url + "/api/rest/users?page=0&size=2",
-                String.class);
-        Assert.assertNotNull(responseString);
-        User[] users = testRestTemplate.getForObject(url + "/api/rest/users", User[].class);
-        Assert.assertNotNull(users);
-        Assert.assertEquals(2, users.length);
     }
 
     @Test

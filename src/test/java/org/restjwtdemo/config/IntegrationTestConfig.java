@@ -1,7 +1,5 @@
 package org.restjwtdemo.config;
 
-import org.restjwtdemo.config.ApplicationConfig;
-import org.restjwtdemo.config.JpaConfig;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,7 +10,7 @@ import feign.RequestInterceptor;
 
 @Configuration
 @Import({ JpaConfig.class, ApplicationConfig.class })
-@EnableFeignClients(basePackages = { "org.restjwtdemo.service.user" })
+@EnableFeignClients(basePackages = { "org.restjwtdemo.service.user","org.restjwtdemo.service.login" })
 public class IntegrationTestConfig {
     @Bean
     public String url() {

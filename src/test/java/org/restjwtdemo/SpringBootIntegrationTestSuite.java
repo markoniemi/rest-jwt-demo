@@ -4,6 +4,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
 @RunWith(Suite.class)
-@Suite.SuiteClasses({ UserServiceRestTemplateIT.class,UserServiceFeignIT.class,UserServiceWsIT.class })
+@Suite.SuiteClasses({ UserServiceRestTemplateIT.class, UserServiceFeignIT.class, UserServiceWsIT.class,
+        LoginServiceFeignIT.class })
 public class SpringBootIntegrationTestSuite {
 }
